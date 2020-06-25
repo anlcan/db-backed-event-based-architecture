@@ -22,23 +22,24 @@ as $$
 declare
     blob_new json := json_agg(new);
     blob_old json := json_agg(old);
+
+    payload json := json_build_object('table', tg_table_name,
+                            'event', tg_op,
+                            'new',to_json(new));
 begin
 
     insert into events ("trigger", "table", event, new, old)
     values (tg_name, tg_table_name, tg_op, blob_new, blob_old);
-    perform pg_notify('events', blob_new )
+    perform pg_notify('events', payload #>> '{}' ) ;
     RETURN NULL;
 end;
 
-    $$;
-
-
+$$;
 
 create trigger storage 
     after insert OR update OR delete on company
     for each row
     execute procedure store_event();
-
 
 ```
 
