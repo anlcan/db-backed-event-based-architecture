@@ -32,4 +32,10 @@ public class Company {
     public static final String randomAddress() {
         return RandomStringUtils.random(16, true, false);
     }
+
+    public Company setAddress(final String address) {
+        this.address = address;
+        return this;
+
+    }
 }

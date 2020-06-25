@@ -15,15 +15,14 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableJdbcRepositories
-class ApplicationConfig extends AbstractJdbcConfiguration {
+class DataConfiguration extends AbstractJdbcConfiguration {
 
     @Bean
     public DataSource dataSource() {
 
-        DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:postgresql://localhost:5432/postgres", "postgres", "pwd");
-        dataSource.setDriverClassName("org.postgresql.Driver");
+        DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:pgsql://localhost:5432/app_db", "app_user", "password");
+//        dataSource.setDriverClassName("com.impossibl.postgres.jdbc.PGDriver");
         return dataSource;
-
     }
 
     @Bean

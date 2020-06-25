@@ -26,6 +26,7 @@ begin
 
     insert into events ("trigger", "table", event, new, old)
     values (tg_name, tg_table_name, tg_op, blob_new, blob_old);
+    perform pg_notify('events', blob_new )
     RETURN NULL;
 end;
 
@@ -33,9 +34,12 @@ end;
 
 
 
-create trigger storage after insert OR update OR delete on company
+create trigger storage 
+    after insert OR update OR delete on company
     for each row
     execute procedure store_event();
+
+
 ```
 
 (https://www.postgresql.org/docs/9.1/trigger-definition.html)[triggers]
