@@ -27,8 +27,6 @@ public class MillionApplication implements ApplicationRunner {
         app.run(args);
     }
 
-
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -36,7 +34,12 @@ public class MillionApplication implements ApplicationRunner {
             @Override
             public void notification(int processId, String channelName, String payload) {
 
-                System.out.println(counter.incrementAndGet() + " " + payload);
+                System.out.println(counter.getAndIncrement() + " " + payload);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
