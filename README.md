@@ -30,11 +30,31 @@ begin
 
     insert into events ("trigger", "table", event, new, old)
     values (tg_name, tg_table_name, tg_op, blob_new, blob_old);
+    RETURN NULL;
+end;
+
+$$;
+create or replace function publish_event ()
+    returns trigger
+    language plpgsql
+as $$
+declare
+    payload json := json_build_object('table', tg_table_name,
+                            'event', tg_op,
+                            'new',to_json(new));
+begin
+
     perform pg_notify('events', payload #>> '{}' ) ;
     RETURN NULL;
 end;
 
 $$;
+
+
+create trigger publish_event_trigger 
+    after insert OR update OR delete on events
+    for each row
+    execute procedure publish_event();
 
 create trigger storage 
     after insert OR update OR delete on company
